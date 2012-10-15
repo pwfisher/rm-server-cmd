@@ -7,6 +7,8 @@ include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
+$verbose = isset($params['v']);
+
 if(isset($params['version'])){
 	throw new version($version);
 	return 0;
@@ -15,14 +17,17 @@ if(isset($params['version'])){
 if(isset($params['help'])){
 	out('Использование: '.UTIL.' [OPTION] --bin=PATH');
 	out('Устанавливает или обновляет команды из пакета rm-server-cmd в директорию PATH.');
+	out('Параметры:');
+	out(' --bin=PATH  - путь к директории bin пользователя \(например /home/user/bin\).');
+	out(' --help      - показать эту справку.');
+	out(' --version   - показать версию утилиты.');
+	out(' -v          - дебаг.');
 	return 0;
 }
 
 if(!isset($params['bin']) or $params['bin'] === true){
 	throw new error('Не указан --bin=PATH');
 }
-
-$verbose = isset($params['v']);
 
 $base = dirname(__FILE__);
 $bin = isset($params['bin']) ? $params['bin'] : null;

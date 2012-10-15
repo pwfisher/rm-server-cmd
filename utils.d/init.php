@@ -1,6 +1,7 @@
 <?
 
 define('NL', "\n");
+define('T', "\t");
 
 $_utilName = basename($_SERVER['SCRIPT_FILENAME']);
 define('UTIL',$_utilName);
@@ -23,6 +24,11 @@ function checkPath($path){
 	}elseif(!is_writable(realpath($path))){
 		throw new Exception("Директория [{$path}] не доступна для записи.");
 	}
+}
+
+function declOfNum($number, $titles) {
+    $cases = array (2, 0, 1, 1, 1, 2);
+    return $number." ".$titles[ ($number%100>4 && $number%100<20)? 2 : $cases[min($number%10, 5)] ];
 }
 
 set_exception_handler(function($exception){
