@@ -18,7 +18,7 @@ if(isset($params['help'])){
 	return 0;
 }
 
-if(!isset($params['bin'])){
+if(!isset($params['bin']) or $params['bin'] === true){
 	throw new error('Не указан --bin=PATH');
 }
 
@@ -37,5 +37,7 @@ foreach($files as $pth){
 		out("Создана ссылка для команды {$name}", 'black', UTIL);
 	}
 }
+
+out("Инициализация завершена.", 'black', UTIL);
 
 include(dirname(__FILE__).'/utils.d/epilog.php');

@@ -16,7 +16,9 @@ function out($str, $color='std', $util=false){
 }
 
 function checkPath($path){
-	if($path === null or $path === false or !file_exists(realpath($path))){
+	if(empty($path)){
+		throw new Exception("Директория не указана.");
+	}elseif(!file_exists(realpath($path))){
 		throw new Exception("Директория [{$path}] не найдена.");
 	}elseif(!is_writable(realpath($path))){
 		throw new Exception("Директория [{$path}] не доступна для записи.");
