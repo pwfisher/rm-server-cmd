@@ -1,15 +1,25 @@
 #!/usr/bin/php
 <?
 
-$version = '0.0.1';
+$version = '0.0.3';
 
 include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
 if(isset($params['version'])){
-	out($version, 'yellow', $util);
+	throw new version($version);
 	return 0;
+}
+
+if(isset($params['help'])){
+	out('Использование: '.UTIL.' [OPTION] --bin=PATH');
+	out('Устанавливает или обновляет команды из пакета rm-server-cmd в директорию PATH.');
+	return 0;
+}
+
+if(!isset($params['bin'])){
+	throw new error('Не указан --bin=PATH');
 }
 
 $verbose = isset($params['v']);
@@ -24,7 +34,7 @@ foreach($files as $pth){
 	system("ln -fs {$pth} {$bin}/{$name}");
 	
 	if($verbose){
-		out("Create link to {$name}", 'black', UTIL);
+		out("Создана ссылка для команды {$name}", 'black', UTIL);
 	}
 }
 

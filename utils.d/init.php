@@ -16,13 +16,16 @@ function out($str, $color='std', $util=false){
 }
 
 function checkPath($path){
-	if(!file_exists(realpath($path))){
-		throw new Exception("Path {$path} not found.");
+	if($path === null or $path === false or !file_exists(realpath($path))){
+		throw new Exception("Директория [{$path}] не найдена.");
 	}elseif(!is_writable(realpath($path))){
-		throw new Exception("Path {$path} not writable.");
+		throw new Exception("Директория [{$path}] не доступна для записи.");
 	}
 }
 
 set_exception_handler(function($exception){
 	out($exception->getMessage(), 'red', UTIL);
 });
+
+class error extends Exception{}
+class version extends Exception{}

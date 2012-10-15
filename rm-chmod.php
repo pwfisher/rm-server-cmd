@@ -1,6 +1,8 @@
 #!/usr/bin/php
 <?
 
+$version = '0.1.1';
+
 include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
