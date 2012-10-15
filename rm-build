@@ -30,8 +30,7 @@ if(!isset($params['bin']) or $params['bin'] === true){
 }
 
 $base = dirname(__FILE__);
-$bin = isset($params['bin']) ? $params['bin'] : null;
-checkPath($bin);
+$bin = checkValidPath($params['bin']);
 
 $files = glob($base.'/rm-*');
 foreach($files as $pth){

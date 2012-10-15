@@ -16,14 +16,16 @@ function out($str, $color='std', $util=false){
 	system ('echo '.CColor::$c['black'].$util.CColor::$c[$color].$str.CColor::$c['std'].NL);
 }
 
-function checkPath($path){
+function checkValidPath($path, $isFile=false){
+	$rpath = realpath($path);
 	if(empty($path)){
-		throw new Exception("Директория не указана.");
-	}elseif(!file_exists(realpath($path))){
-		throw new Exception("Директория [{$path}] не найдена.");
-	}elseif(!is_writable(realpath($path))){
-		throw new Exception("Директория [{$path}] не доступна для записи.");
+		throw new Exception("Файл или директория не указана.");
+	}elseif(!file_exists($rpath)){
+		throw new Exception("Файл или директория [{$path}] не найдена.");
+	}elseif(!is_writable($rpath)){
+		throw new Exception("Файл или директория [{$path}] не доступна для записи.");
 	}
+	return $rpath;
 }
 
 function declOfNum($number, $titles) {
@@ -33,6 +35,7 @@ function declOfNum($number, $titles) {
 
 set_exception_handler(function($exception){
 	out($exception->getMessage(), 'red', UTIL);
+	out('--help для вызова помощи.', 'black', UTIL);
 });
 
 class error extends Exception{}
