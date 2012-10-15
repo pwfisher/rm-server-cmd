@@ -40,9 +40,9 @@ if($verbose){
 
 if($verbose){
 	out("Установка права доступа для директории [{$path}].", 'black', UTIL);
-	system("rm-chmod -v --path={$path}");
+	system("rm-chmod -v --path={$path} --files=0644 --dirs=0755");
 }else{
-	system("rm-chmod --path={$path}");
+	system("rm-chmod --path={$path} --files=0644 --dirs=0755");
 }
 
 out("Права доступа и права владения для директории [{$path}] успешно установлены.", 'black', UTIL);

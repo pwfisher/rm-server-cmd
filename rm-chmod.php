@@ -9,6 +9,12 @@ $params = CommandLine::parseArgs($_SERVER['argv']);
 
 $verbose = isset($params['v']);
 
+$aIgnorePaths = array('*.git*','*.ssh*','*.cache*');
+$sIgnorePaths = '';
+foreach($aIgnorePaths as $pattern){
+	$sIgnorePaths .= ' -not -path "'.$pattern.'"';
+}
+
 if(isset($params['version'])){
 	throw new version($version);
 }
@@ -35,9 +41,9 @@ $path = checkValidPath($params['path']);
 $mode_f = isset($params['files']) ? $params['files'] : '0664';
 $mode_d = isset($params['dirs']) ? $params['dirs'] : '0775';
 
-exec("sudo find {$path} -type d",$dirs);
-exec("sudo find {$path} -type f",$files);
-exec("sudo find {$path} -type f -executable",$executable);
+exec("sudo find {$path} -type d {$sIgnorePaths}",$dirs);
+exec("sudo find {$path} -type f {$sIgnorePaths}",$files);
+exec("sudo find {$path} -type f {$sIgnorePaths} -executable",$executable);
 
 foreach($dirs as $dir){
 	$mode = isset($system[$dir]) ? $system[$dir] : $mode_d;
@@ -48,7 +54,7 @@ foreach($files as $file){
 	system("sudo chmod {$mode} {$file}");
 }
 foreach($executable as $file){
-	system("sudo chmod +x {$file}");
+	system("sudo chmod u+x {$file}");
 }
 
 if($verbose){
