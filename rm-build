@@ -1,0 +1,31 @@
+#!/usr/bin/php
+<?
+
+$version = '0.0.1';
+
+include(dirname(__FILE__).'/utils.d/init.php');
+
+$params = CommandLine::parseArgs($_SERVER['argv']);
+
+if(isset($params['version'])){
+	out($version, 'yellow', $util);
+	return 0;
+}
+
+$verbose = isset($params['v']);
+
+$base = dirname(__FILE__);
+$bin = isset($params['bin']) ? $params['bin'] : null;
+checkPath($bin);
+
+$files = glob($base.'/rm-*');
+foreach($files as $pth){
+	$name = str_replace('.php', '', basename($pth));
+	system("ln -fs {$pth} {$bin}/{$name}");
+	
+	if($verbose){
+		out("Create link to {$name}", 'black', UTIL);
+	}
+}
+
+include(dirname(__FILE__).'/utils.d/epilog.php');

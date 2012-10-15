@@ -15,6 +15,14 @@ function out($str, $color='std', $util=false){
 	system ('echo '.CColor::$c['black'].$util.CColor::$c[$color].$str.CColor::$c['std'].NL);
 }
 
-function showVersion($version, $util){
-	out($version, 'yellow', $util);
+function checkPath($path){
+	if(!file_exists(realpath($path))){
+		throw new Exception("Path {$path} not found.");
+	}elseif(!is_writable(realpath($path))){
+		throw new Exception("Path {$path} not writable.");
+	}
 }
+
+set_exception_handler(function($exception){
+	out($exception->getMessage(), 'red', UTIL);
+});
