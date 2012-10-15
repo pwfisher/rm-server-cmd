@@ -5,6 +5,11 @@ include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
+if(isset($params['v'])){
+	showVersion('0.1.1', UTIL);
+	return ;
+}
+
 if(!isset($params['path'])){
 	out('Unknown path.', 'red', UTIL);
 }else{
