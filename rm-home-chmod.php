@@ -5,6 +5,7 @@ $version = '0.1.0';
 
 include(dirname(__FILE__).'/utils.d/init.php');
 
+
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
 $verbose = isset($params['v']);
@@ -17,10 +18,10 @@ if(isset($params['help'])){
 	out('Использование: '.UTIL.' USER');
 	out('Устанавливает владельца \(chown\) на домашнюю директорию пользователя USER.');
 	out('Параметры:');
-	out(' USER   - логин пользователя, который будет назначен владельцем.');
-	out(' --help        - показать эту справку.');
-	out(' --version     - показать версию утилиты.');
-	out(' -v            - дебаг.');
+	out(' USER      - логин пользователя, который будет назначен владельцем.');
+	out(' --help    - показать эту справку.');
+	out(' --version - показать версию утилиты.');
+	out(' -v        - дебаг.');
 	return 0;
 }
 

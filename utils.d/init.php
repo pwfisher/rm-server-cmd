@@ -1,4 +1,4 @@
-<?
+<?php 
 
 define('NL', "\n");
 define('T', "\t");
@@ -6,7 +6,7 @@ define('T', "\t");
 $_utilName = basename($_SERVER['SCRIPT_FILENAME']);
 define('UTIL',$_utilName);
 
-define('VERSION', '0.0.1');
+define('VERSION', '0.0.3');
 
 include(dirname(__FILE__).'/CColor.php');
 include(dirname(__FILE__).'/CCommandLine.php');
@@ -22,8 +22,6 @@ function checkValidPath($path, $isFile=false){
 		throw new Exception("Файл или директория не указана.");
 	}elseif(!file_exists($rpath)){
 		throw new Exception("Файл или директория [{$path}] не найдена.");
-	}elseif(!is_writable($rpath)){
-		throw new Exception("Файл или директория [{$path}] не доступна для записи.");
 	}
 	return $rpath;
 }
