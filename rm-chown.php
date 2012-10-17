@@ -7,32 +7,34 @@ include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
-$verbose = isset($params['v']);
+$verbose = isset($params['v']) || isset($params['verbose']);
 
 if(isset($params['version'])){
-	throw new version($version);
+	return version($version, $verbose);
 }
 
-if(isset($params['help'])){
-	out('Использование: '.UTIL.' --path=PATH --user=USER [--group=GROUP]');
-	out('Устанавливает владельца \(chown\) на директорию PATH и все файлы внутри.');
-	out('Параметры:');
-	out(' --path=PATH   - путь к директории, на которую необходимо установить владельца \(chown\).');
-	out(' --user=USER   - логин пользователя, который будет назначен владельцем.');
-	out(' --group=GROUP - группа пользователя, который будет назначен владельцем \(по умолчанию GROUP равен USER\).');
-	out(' -r            - рекурсивно для дочерних элементов.');
-	out(' --help        - показать эту справку.');
-	out(' --version     - показать версию утилиты.');
-	out(' -v            - дебаг.');
-	return 0;
+if(isset($params['help']) || isset($params['h'])){
+	return help('Использование rm-chown [OPTION] --path=PATH --user=USER [--group=GROUP]
+Устанавливает владельца USER (chown) на директорию PATH и все файлы внутри.
+
+Параметры:
+      --path=PATH   - путь к директории, на которую необходимо установить 
+                    владельца (chown).
+      --user=USER   - логин пользователя, чья домашняя директория будет
+                      обработанна.
+      --group=GROUP - группа пользователя, который будет назначен владельцем
+                      (по умолчанию GROUP равен USER).
+  -v, --verbose     - более подробный вывод.
+  -h, --help        - показать эту справку.
+      --version     - показать версию утилиты.');
 }
 
 if(!isset($params['path'])){
-	throw new error('Не указан --path=PATH');
+	return error('Не указан параметр --path=PATH');
 }
 
 if(!isset($params['user'])){
-	throw new error('Не указан --user=USER');
+	return error('Не указан параметр --user=USER');
 }
 
 $path = checkValidPath($params['path']);
@@ -45,3 +47,5 @@ $type = is_dir($path) ? 'директории' : 'файла';
 
 system("sudo chown {$recursive} {$login}:{$group} {$path}");
 out("Владелец для {$type} [{$path}] {$recursive} \({$login}:{$group}\) успешно установлен.", 'black', UTIL);
+
+return endCommand();

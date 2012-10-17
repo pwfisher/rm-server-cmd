@@ -1,36 +1,42 @@
 #!/usr/bin/php
 <?
 
-$version = '0.1.0';
+$version = '0.1.1';
 
 include(dirname(__FILE__).'/utils.d/init.php');
 
-
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
-$verbose = isset($params['v']);
+$verbose = isset($params['v']) || isset($params['verbose']);
 
 if(isset($params['version'])){
-	throw new version($version);
+	return version($version, $verbose);
 }
 
-if(isset($params['help'])){
-	out('Использование: '.UTIL.' USER');
-	out('Устанавливает владельца \(chown\) на домашнюю директорию пользователя USER.');
-	out('Параметры:');
-	out(' USER      - логин пользователя, который будет назначен владельцем.');
-	out(' --help    - показать эту справку.');
-	out(' --version - показать версию утилиты.');
-	out(' -v        - дебаг.');
-	return 0;
+if(isset($params['help']) || isset($params['h'])){
+	return help('Использование rm-home-chmod [OPTION] [--user=USER]
+Устанавливает владельца (chown) и права доступа (chmod) на домашнюю директорию
+пользователя USER. Если USER не указан, используется текущий ({$user}).
+
+Внимание! Для пользователя root утилита недоступна.
+
+Параметры:
+      --user=USER - логин пользователя, чья домашняя директория будет обработанна.
+  -v, --verbose   - более подробный вывод.
+  -h, --help      - показать эту справку.
+      --version   - показать версию утилиты.');
 }
 
 if(!isset($params[0])){
-	throw new error('Пользователь не указан.');
+	$params[0] = USER;
 }
 
 $login = $params[0];
 $path = '/home/'.$login;
+
+if($login === 'root'){
+	return error('Невозможно провести операцию для пользователя root.');
+}
 
 if($verbose){
 	out("Установка права владения для директории [{$path}].", 'black', UTIL);
@@ -46,4 +52,6 @@ if($verbose){
 	system("rm-chmod --path={$path} --files=0644 --dirs=0755");
 }
 
-out("Права доступа и права владения для директории [{$path}] успешно установлены.", 'black', UTIL);
+out("Права доступа и права владения для директории [{$path}] успешно установлены.", 'green', UTIL);
+
+return endCommand();

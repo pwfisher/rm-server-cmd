@@ -1,32 +1,57 @@
 #!/usr/bin/php
 <?
 
-$version = '0.0.3';
+$version = '0.0.5';
 
 include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
-$verbose = isset($params['v']);
+$verbose = isset($params['v']) || isset($params['verbose']);
 
 if(isset($params['version'])){
-	throw new version($version);
-	return 0;
+	return version($version, $verbose);
 }
 
-if(isset($params['help'])){
-	out('Использование: '.UTIL.' [OPTION] --bin=PATH');
-	out('Устанавливает или обновляет команды из пакета rm-server-cmd в директорию PATH.');
-	out('Параметры:');
-	out(' --bin=PATH  - путь к директории bin пользователя \(например /home/user/bin\).');
-	out(' --help      - показать эту справку.');
-	out(' --version   - показать версию утилиты.');
-	out(' -v          - дебаг.');
-	return 0;
+if(isset($params['help']) || isset($params['h'])){
+	return help('Использование rm-build [OPTION] [--bin=PATH]
+Устанавливает или обновляет команды из пакета rm-server-cmd в директорию PATH.
+
+Параметры:
+      --bin=PATH - путь к директории bin пользователя (например /home/user/bin).
+  -v, --verbose  - более подробный вывод.
+  -h, --help     - показать эту справку.
+      --version  - показать версию утилиты.');
 }
+
+$home = isset($_SERVER['HOME']) ? $_SERVER['HOME'] : false;
 
 if(!isset($params['bin']) or $params['bin'] === true){
-	throw new error('Не указан --bin=PATH');
+	if(empty($home)){
+		throw new error('Не удалось определить домашнюю директорию пользователя.');
+	}else{
+		$params['bin'] = "{$home}/bin";
+		
+		if($verbose){
+			$res = file_exists($params['bin']) ? 'true' : 'false';
+			out("Проверка существования директории [{$params['bin']}]: {$res}", 'black', UTIL);
+		}
+		
+		if(!file_exists($params['bin'])){
+			$res = @mkdir($params['bin']);
+			if($res){
+				chmod($params['bin'], 0700);
+				chown($params['bin'], USER);
+				chgrp($params['bin'], USER);
+			}
+			$res = $res === true ? 'true' : 'false';
+			out("Попытка создания директории [{$params['bin']}]: {$res}", 'black', UTIL);
+		}
+		
+		if(!file_exists($params['bin'])){
+			return error('Не указан параметр --bin=PATH');
+		}
+	}
 }
 
 $base = dirname(__FILE__);
@@ -38,10 +63,10 @@ foreach($files as $pth){
 	system("ln -fs {$pth} {$bin}/{$name}");
 	
 	if($verbose){
-		out("Создана ссылка для команды {$name}", 'black', UTIL);
+		out("Создана команда [{$bin}/{$name}]", 'black', UTIL);
 	}
 }
 
-out("Инициализация завершена.", 'black', UTIL);
+out("Инициализация завершена.", 'green', UTIL);
 
-include(dirname(__FILE__).'/utils.d/epilog.php');
+return endCommand();

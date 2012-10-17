@@ -63,3 +63,5 @@ system("rm-home-chmod {$login}");
 system("sudo passwd {$login}");
 
 out("Пользователь {$login} успешно создан.", 'green', UTIL);
+
+return endCommand();

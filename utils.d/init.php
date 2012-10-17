@@ -3,13 +3,19 @@
 define('NL', "\n");
 define('T', "\t");
 
+define('VERSION', '0.0.4');
+
 $_utilName = basename($_SERVER['SCRIPT_FILENAME']);
 define('UTIL',$_utilName);
 
-define('VERSION', '0.0.4');
+include(dirname(__FILE__).'/inc.classes.php');
 
-include(dirname(__FILE__).'/CColor.php');
-include(dirname(__FILE__).'/CCommandLine.php');
+exec('whoami', $res); $user = $res[0];
+if(empty($user)){
+	throw new error('Не удалось определить пользователя.');
+}
+
+define('USER', $user);
 
 function out($str, $color='std', $util=false){
 	$util = empty($util) ? '' : $util.': ';
@@ -30,11 +36,3 @@ function declOfNum($number, $titles) {
     $cases = array (2, 0, 1, 1, 1, 2);
     return $number." ".$titles[ ($number%100>4 && $number%100<20)? 2 : $cases[min($number%10, 5)] ];
 }
-
-set_exception_handler(function($exception){
-	out($exception->getMessage(), 'red', UTIL);
-	out('--help для вызова помощи.', 'black', UTIL);
-});
-
-class error extends Exception{}
-class version extends Exception{}
