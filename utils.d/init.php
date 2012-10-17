@@ -6,7 +6,7 @@ define('T', "\t");
 $_utilName = basename($_SERVER['SCRIPT_FILENAME']);
 define('UTIL',$_utilName);
 
-define('VERSION', '0.0.3');
+define('VERSION', '0.0.4');
 
 include(dirname(__FILE__).'/CColor.php');
 include(dirname(__FILE__).'/CCommandLine.php');

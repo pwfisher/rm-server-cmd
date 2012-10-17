@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?
 
-$version = '0.1.0';
+$version = '0.1.1';
 
 include(dirname(__FILE__).'/utils.d/init.php');
 
@@ -43,14 +43,6 @@ if(in_array($login, $users)){
 }
 
 $home = "/home/{$login}";
-
-/*exec("sudo htpasswd -nb {$login} {$login}", $res);
-$pass = (isset($res[0]) and !empty($res[0])) ? explode(':',$res[0]) : false;
-$pass = (isset($pass[1]) and !empty($pass[1])) ? $pass[1] : false;
-if(empty($pass)){
-	throw new error('Не удалось зашифровать пароль.');
-}*/
-
 
 if($verbose){
 	out("Создание группы {$login}.", 'black', UTIL);
