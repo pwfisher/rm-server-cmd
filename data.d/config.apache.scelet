@@ -1,0 +1,26 @@
+<VirtualHost *:8080>
+	ServerAdmin webmaster@localhost
+	
+	ServerName [DOMAIN]
+
+	DocumentRoot /var/www/[DOMAIN]/www
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/[DOMAIN]/www/>
+		Options FollowSymLinks MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/[DOMAIN].error.log
+
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/[DOMAIN].access.log combined
+	
+	include /etc/phpmyadmin/apache.conf
+
+</VirtualHost>

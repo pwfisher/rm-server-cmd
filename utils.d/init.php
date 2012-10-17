@@ -3,7 +3,7 @@
 define('NL', "\n");
 define('T', "\t");
 
-define('VERSION', '0.0.4');
+define('VERSION', '0.0.6');
 
 $_utilName = basename($_SERVER['SCRIPT_FILENAME']);
 define('UTIL',$_utilName);

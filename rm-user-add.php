@@ -7,27 +7,25 @@ include(dirname(__FILE__).'/utils.d/init.php');
 
 $params = CommandLine::parseArgs($_SERVER['argv']);
 
-$verbose = isset($params['v']);
+$verbose = isset($params['v']) || isset($params['verbose']);
 
 if(isset($params['version'])){
-	throw new version($version);
+	return version($version, $verbose);
 }
 
-if(isset($params['help'])){
-	out('Использование: '.UTIL.' USER');
-	out('Устанавливает владельца \(chown\) на домашнюю директорию пользователя USER.');
-	out('Параметры:');
-	out(' USER      - логин пользователя, который будет создан.');
-	out(' --help    - показать эту справку.');
-	out(' --version - показать версию утилиты.');
-	out(' -v        - дебаг.');
-	return 0;
+if(isset($params['help']) || isset($params['h'])){
+	return help('Использование rm-user-add [OPTION] USER
+Создает пользователя USER с группой www-data.
+
+Параметры:
+  -v, --verbose   - более подробный вывод.
+  -h, --help      - показать эту справку.
+      --version   - показать версию утилиты.');
 }
 
 if(!isset($params[0])){
-	throw new error('Пользователь не указан.');
+	throw new error('Не указан логин нового пользователя.');
 }
-
 
 $login = $params[0];
 
@@ -39,7 +37,7 @@ foreach($passwd as $row){
 }
 
 if(in_array($login, $users)){
-	throw new error("Пользователь {$login} уже существует.");
+	return error("Пользователь {$login} уже существует.");
 }
 
 $home = "/home/{$login}";
