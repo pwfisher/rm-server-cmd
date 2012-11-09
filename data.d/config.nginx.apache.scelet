@@ -1,4 +1,7 @@
+
+# [DOMAIN]
 server {
+
 	listen 80;
 
 	root /var/www/[DOMAIN]/www;

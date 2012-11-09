@@ -1,3 +1,5 @@
+
+# [DOMAIN]
 <VirtualHost *:8080>
 	ServerAdmin webmaster@localhost
 	
