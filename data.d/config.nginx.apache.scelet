@@ -4,7 +4,7 @@ server {
 	root /var/www/[DOMAIN]/www;
 	index index.php index.html index.htm;
 
-	server_name [DOMAIN];
+	server_name [DOMAIN] www.[DOMAIN];
 
 	location / {
 		try_files $uri $uri/ /index.html;
