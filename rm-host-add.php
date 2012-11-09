@@ -69,13 +69,19 @@ if(file_exists($apacheConfigPath)){
 $nginxConfig = file_get_contents(dirname(__FILE__).'/data.d/config.nginx.'.$php.'.scelet');
 $nginxConfig = str_replace('[DOMAIN]', $domain, $nginxConfig);
 file_put_contents($nginxConfigPath, $nginxConfig);
+system("sudo chmod 0660 {$nginxConfigPath}; sudo chown www-data:www-data {$nginxConfigPath}");
 
 $apacheConfig = file_get_contents(dirname(__FILE__).'/data.d/config.apache.scelet');
 $apacheConfig = str_replace('[DOMAIN]', $domain, $apacheConfig);
 file_put_contents($apacheConfigPath, $apacheConfig);
+system("sudo chmod 0660 {$apacheConfigPath}; sudo chown www-data:www-data {$apacheConfigPath}");
 
-mkdir($pathSourse.'/'.$domain);
-mkdir($pathSourse.'/'.$domain.'/www');
+$pathDomain = $pathSourse.'/'.$domain;
+
+mkdir($pathDomain);
+mkdir($pathDomain.'/www');
+
+system('sudo chown -R www-data:www-data '.$pathDomain);
 
 system('sudo service nginx restart');
 system('sudo service apache2 restart');
